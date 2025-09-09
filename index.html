@@ -153,8 +153,8 @@
             teacher1@college.edu / teacher123<br>
             teacher2@college.edu / prof456</p>
             <p><strong>Students:</strong><br>
-            student1@college.edu / alice123<br>
-            student2@college.edu / bob456</p>
+            student1@college.edu / student1<br>
+            student2@college.edu / student2</p>
         </div>
     </div>
 
@@ -175,8 +175,8 @@
                 <select id="subject">
                     <option value="">Select Subject</option>
                     <option value="Mathematics">Mathematics</option>
-                    <option value="Physics">Physics</option>
-                    <option value="Chemistry">Chemistry</option>
+                    <option value="Physics">Database Systems</option>
+                    <option value="Chemistry">Operating Systems</option>
                     <option value="Computer Science">Computer Science</option>
                 </select>
             </div>
@@ -266,40 +266,40 @@
         const users = {
             teachers: {
                 'teacher1@college.edu': { 
-                    name: 'Dr. John Smith', 
+                    name: 'Dr. Sumit Sharma', 
                     password: 'teacher123',
-                    subjects: ['Mathematics', 'Physics'] 
+                    subjects: ['Mathematics', 'Database Systems'] 
                 },
                 'teacher2@college.edu': { 
-                    name: 'Prof. Jane Doe', 
+                    name: 'Prof. Ajay Kumar', 
                     password: 'prof456',
-                    subjects: ['Computer Science', 'Chemistry'] 
+                    subjects: ['Computer Science', 'Operating Systems'] 
                 }
             },
             students: {
                 'student1@college.edu': { 
-                    name: 'Alice Johnson',
-                    password: 'alice123',
+                    name: 'Samarth Tyagi',
+                    password: 'student1',
                     branch: 'CSE', 
                     section: 'A',
-                    subjects: ['Mathematics', 'Physics', 'Computer Science'],
+                    subjects: ['Mathematics', 'Database Systems', 'Computer Science'],
                     faceRegistered: false,
                     attendance: {
                         'Mathematics': { present: 15, total: 20 },
-                        'Physics': { present: 18, total: 22 },
+                        'Database Systems': { present: 18, total: 22 },
                         'Computer Science': { present: 12, total: 15 }
                     }
                 },
                 'student2@college.edu': { 
-                    name: 'Bob Wilson',
-                    password: 'bob456',
+                    name: 'Parth Garg',
+                    password: 'student2',
                     branch: 'CSE', 
                     section: 'A',
-                    subjects: ['Mathematics', 'Physics', 'Computer Science'],
+                    subjects: ['Mathematics', 'Operating Systems', 'Computer Science'],
                     faceRegistered: false,
                     attendance: {
                         'Mathematics': { present: 12, total: 20 },
-                        'Physics': { present: 14, total: 22 },
+                        'Operating Systems': { present: 14, total: 22 },
                         'Computer Science': { present: 10, total: 15 }
                     }
                 }
