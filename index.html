@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Attendance Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            text-align: center;
+            max-width: 400px;
+            margin: 100px auto;
+        }
+
+        .dashboard {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
+        }
+
+        .credentials {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+            text-align: left;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 20px;
+        }
+
+        .card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+        }
+
+        .otp-display {
+            font-size: 36px;
+            font-weight: bold;
+            color: #667eea;
+            text-align: center;
+            padding: 20px;
+            background: #e7f3ff;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="loginPage" class="login-container">
+        <div class="logo">🎓 Smart Attendance</div>
+        <h2>Login to Your Account</h2>
+        
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" placeholder="Enter your college email">
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="Enter your password">
+        </div>
+        <button onclick="loginUser()" class="btn">Login</button>
+        
+        <div class="credentials">
+            <p><strong>Demo Credentials:</strong></p>
+            <p><strong>Teachers:</strong><br>
+            teacher1@college.edu / teacher123<br>
+            teacher2@college.edu / prof456</p>
+            <p><strong>Students:</strong><br>
+            student1@college.edu / alice123<br>
+            student2@college.edu / bob456</p>
+        </div>
+    </div>
+
+    <!-- Teacher Dashboard -->
+    <div id="teacherDashboard" class="container dashboard">
+        <div class="header">
+            <div>
+                <h1>Teacher Dashboard</h1>
+                <p id="teacherWelcome"></p>
+            </div>
+            <button onclick="logout()" class="btn btn-danger">Logout</button>
+        </div>
+
+        <div class="card">
+            <h3>Generate OTP for Class</h3>
+            <div class="form-group">
+                <label>Subject</label>
+                <select id="subject">
+                    <option value="">Select Subject</option>
+                    <option value="Mathematics">Mathematics</option>
+                    <option value="Physics">Physics</option>
+                    <option value="Chemistry">Chemistry</option>
+                    <option value="Computer Science">Computer Science</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Branch</label>
+                <select id="branch">
+                    <option value="">Select Branch</option>
+                    <option value="CSE">Computer Science Engineering</option>
+                    <option value="ECE">Electronics & Communication</option>
+                    <option value="ME">Mechanical Engineering</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Section</label>
+                <select id="section">
+                    <option value="">Select Section</option>
+                    <option value="A">Section A</option>
+                    <option value="B">Section B</option>
+                    <option value="C">Section C</option>
+                </select>
+            </div>
+            <button onclick="generateOTP()" class="btn">Generate OTP</button>
+        </div>
+
+        <div class="card">
+            <h3>Current OTP</h3>
+            <div id="otpDisplay" class="otp-display">No OTP Generated</div>
+            <div id="otpTimer" style="text-align: center; font-weight: bold; color: #ff6b6b;"></div>
+        </div>
+
+        <div class="card">
+            <h3>Students Present</h3>
+            <div id="presentStudents">
+                <p>No students marked present yet</p>
+            </div>
+            <button onclick="updateAttendance()" class="btn btn-success hidden" id="updateBtn">Update Final Attendance</button>
+        </div>
+    </div>
+
+    <!-- Student Dashboard -->
+    <div id="studentDashboard" class="container dashboard">
+        <div class="header">
+            <div>
+                <h1>Student Dashboard</h1>
+                <p id="studentWelcome"></p>
+                <p id="studentInfo"></p>
+            </div>
+            <button onclick="logout()" class="btn btn-danger">Logout</button>
+        </div>
+
+        <div class="card">
+            <h3>Face Registration</h3>
+            <video id="video" width="300" height="200" autoplay style="border-radius: 10px; margin: 10px;"></video>
+            <div>
+                <button onclick="registerFace()" class="btn" id="registerBtn">Register Face</button>
+                <button onclick="captureFace()" class="btn btn-success" id="captureBtn" disabled>Capture Face</button>
+            </div>
+            <p id="faceStatus">Click "Register Face" to register your face</p>
+        </div>
+
+        <div class="card">
+            <h3>Mark Attendance</h3>
+            <div class="form-group">
+                <label>Subject</label>
+                <select id="studentSubject">
+                    <option value="">Select Subject</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Enter OTP</label>
+                <input type="text" id="studentOTP" placeholder="Enter 6-digit OTP">
+            </div>
+            <button onclick="markAttendance()" class="btn btn-success">Mark Attendance</button>
+            <p id="attendanceStatus"></p>
+        </div>
+
+        <div class="card">
+            <h3>My Attendance Analytics</h3>
+            <div id="studentAnalytics">
+                <p>Loading analytics...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // User data
+        const users = {
+            teachers: {
+                'teacher1@college.edu': { 
+                    name: 'Dr. John Smith', 
+                    password: 'teacher123',
+                    subjects: ['Mathematics', 'Physics'] 
+                },
+                'teacher2@college.edu': { 
+                    name: 'Prof. Jane Doe', 
+                    password: 'prof456',
+                    subjects: ['Computer Science', 'Chemistry'] 
+                }
+            },
+            students: {
+                'student1@college.edu': { 
+                    name: 'Alice Johnson',
+                    password: 'alice123',
+                    branch: 'CSE', 
+                    section: 'A',
+                    subjects: ['Mathematics', 'Physics', 'Computer Science'],
+                    faceRegistered: false,
+                    attendance: {
+                        'Mathematics': { present: 15, total: 20 },
+                        'Physics': { present: 18, total: 22 },
+                        'Computer Science': { present: 12, total: 15 }
+                    }
+                },
+                'student2@college.edu': { 
+                    name: 'Bob Wilson',
+                    password: 'bob456',
+                    branch: 'CSE', 
+                    section: 'A',
+                    subjects: ['Mathematics', 'Physics', 'Computer Science'],
+                    faceRegistered: false,
+                    attendance: {
+                        'Mathematics': { present: 12, total: 20 },
+                        'Physics': { present: 14, total: 22 },
+                        'Computer Science': { present: 10, total: 15 }
+                    }
+                }
+            }
+        };
+
+        // Global variables
+        let currentUser = null;
+        let currentOTP = null;
+        let otpTimer = null;
+        let studentsInClass = [];
+        let videoStream = null;
+
+        // LOGIN FUNCTION - FIXED
+        function loginUser() {
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+
+            console.log('=== LOGIN DEBUG ===');
+            console.log('Email entered:', email);
+            console.log('Password entered:', password);
+            console.log('Available teachers:', Object.keys(users.teachers));
+            console.log('Available students:', Object.keys(users.students));
+
+            if (!email || !password) {
+                alert('Please enter both email and password!');
+                return;
+            }
+
+            // Check if teacher exists
+            if (users.teachers.hasOwnProperty(email)) {
+                console.log('Found teacher:', email);
+                console.log('Teacher password in system:', users.teachers[email].password);
+                if (users.teachers[email].password === password) {
+                    console.log('Teacher login SUCCESS');
+                    currentUser = { email, type: 'teacher', data: users.teachers[email] };
+                    showTeacherDashboard();
+                    return;
+                } else {
+                    console.log('Teacher password FAILED');
+                    alert('Wrong password for teacher account!');
+                    return;
+                }
+            }
+
+            // Check if student exists
+            if (users.students.hasOwnProperty(email)) {
+                console.log('Found student:', email);
+                console.log('Student password in system:', users.students[email].password);
+                if (users.students[email].password === password) {
+                    console.log('Student login SUCCESS');
+                    currentUser = { email, type: 'student', data: users.students[email] };
+                    showStudentDashboard();
+                    return;
+                } else {
+                    console.log('Student password FAILED');
+                    alert('Wrong password for student account!');
+                    return;
+                }
+            }
+
+            console.log('Email NOT FOUND in system');
+            alert('Email address not found in our system!');
+        }
+
+        function showTeacherDashboard() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('teacherDashboard').style.display = 'block';
+            document.getElementById('teacherWelcome').textContent = `Welcome, ${currentUser.data.name}`;
+            console.log('Teacher dashboard shown');
+        }
+
+        function showStudentDashboard() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('studentDashboard').style.display = 'block';
+            document.getElementById('studentWelcome').textContent = `Welcome, ${currentUser.data.name}`;
+            document.getElementById('studentInfo').textContent = `Branch: ${currentUser.data.branch} | Section: ${currentUser.data.section}`;
+            
+            // Populate subjects
+            const subjectSelect = document.getElementById('studentSubject');
+            subjectSelect.innerHTML = '<option value="">Select Subject</option>';
+            currentUser.data.subjects.forEach(subject => {
+                const option = document.createElement('option');
+                option.value = subject;
+                option.textContent = subject;
+                subjectSelect.appendChild(option);
+            });
+
+            startCamera();
+            updateStudentAnalytics();
+            console.log('Student dashboard shown');
+        }
+
+        function logout() {
+            currentUser = null;
+            currentOTP = null;
+            if (otpTimer) clearInterval(otpTimer);
+            if (videoStream) {
+                videoStream.getTracks().forEach(track => track.stop());
+                videoStream = null;
+            }
+            
+            document.getElementById('teacherDashboard').style.display = 'none';
+            document.getElementById('studentDashboard').style.display = 'none';
+            document.getElementById('loginPage').style.display = 'block';
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+        }
+
+        // OTP Generation
+        function generateOTP() {
+            const subject = document.getElementById('subject').value;
+            const branch = document.getElementById('branch').value;
+            const section = document.getElementById('section').value;
+            
+            if (!subject || !branch || !section) {
+                alert('Please select subject, branch, and section');
+                return;
+            }
+            
+            currentOTP = Math.floor(100000 + Math.random() * 900000).toString();
+            studentsInClass = [];
+            
+            document.getElementById('otpDisplay').textContent = currentOTP;
+            document.getElementById('updateBtn').classList.remove('hidden');
+            
+            // 30 second timer
+            let timeLeft = 30;
+            otpTimer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('otpTimer').textContent = `Time remaining: ${timeLeft}s`;
+                
+                if (timeLeft <= 0) {
+                    currentOTP = null;
+                    clearInterval(otpTimer);
+                    document.getElementById('otpDisplay').textContent = 'OTP Expired';
+                    document.getElementById('otpTimer').textContent = '';
+                }
+            }, 1000);
+        }
+
+        // Camera Functions
+        function startCamera() {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    videoStream = stream;
+                    document.getElementById('video').srcObject = stream;
+                })
+                .catch(err => {
+                    document.getElementById('faceStatus').textContent = 'Camera access denied';
+                });
+        }
+
+        function registerFace() {
+            document.getElementById('faceStatus').textContent = 'Registering face... Please look at the camera';
+            
+            setTimeout(() => {
+                currentUser.data.faceRegistered = true;
+                document.getElementById('registerBtn').disabled = true;
+                document.getElementById('captureBtn').disabled = false;
+                document.getElementById('faceStatus').textContent = 'Face registered successfully!';
+            }, 2000);
+        }
+
+        function captureFace() {
+            document.getElementById('faceStatus').textContent = 'Verifying face...';
+            
+            setTimeout(() => {
+                document.getElementById('faceStatus').textContent = 'Face verified successfully!';
+            }, 1500);
+        }
+
+        // Mark Attendance - Enhanced with face verification check
+        function markAttendance() {
+            const subject = document.getElementById('studentSubject').value;
+            const otp = document.getElementById('studentOTP').value;
+            
+            if (!subject) {
+                alert('Please select a subject');
+                return;
+            }
+            
+            if (!otp) {
+                alert('Please enter OTP');
+                return;
+            }
+            
+            if (otp !== currentOTP) {
+                document.getElementById('attendanceStatus').textContent = 'Invalid OTP!';
+                document.getElementById('attendanceStatus').style.color = '#ff6b6b';
+                return;
+            }
+            
+            if (!currentUser.data.faceRegistered) {
+                document.getElementById('attendanceStatus').textContent = 'Please register your face first!';
+                document.getElementById('attendanceStatus').style.color = '#ff6b6b';
+                return;
+            }
+
+            if (!currentUser.faceVerified) {
+                document.getElementById('attendanceStatus').textContent = 'Please capture and verify your face first!';
+                document.getElementById('attendanceStatus').style.color = '#ff6b6b';
+                return;
+            }
+            
+            // Simulate beacon check
+            const beaconConnected = Math.random() > 0.3; // 70% success rate
+            
+            if (!beaconConnected) {
+                document.getElementById('attendanceStatus').textContent = 'Beacon not connected! Please move closer to teacher.';
+                document.getElementById('attendanceStatus').style.color = '#ff6b6b';
+                return;
+            }
+            
+            // All checks passed - mark attendance
+            const studentInfo = {
+                email: currentUser.email,
+                name: currentUser.data.name,
+                subject: subject,
+                time: new Date().toLocaleTimeString()
+            };
+            
+            studentsInClass.push(studentInfo);
+            updatePresentStudentsList();
+            
+            document.getElementById('attendanceStatus').textContent = '✅ Attendance marked successfully! (Face verified + OTP matched + Beacon connected)';
+            document.getElementById('attendanceStatus').style.color = '#51cf66';
+            document.getElementById('studentOTP').value = '';
+            
+            // Reset face verification for next attendance
+            currentUser.faceVerified = false;
+            
+            // Update attendance record
+            if (currentUser.data.attendance[subject]) {
+                currentUser.data.attendance[subject].present++;
+                currentUser.data.attendance[subject].total++;
+            }
+            updateStudentAnalytics();
+        }
+
+        function updatePresentStudentsList() {
+            const container = document.getElementById('presentStudents');
+            if (studentsInClass.length === 0) {
+                container.innerHTML = '<p>No students marked present yet</p>';
+                return;
+            }
+            
+            container.innerHTML = studentsInClass.map(student => 
+                `<div style="padding: 10px; border-bottom: 1px solid #eee;">
+                    <span>${student.name} (${student.email})</span>
+                    <span style="color: #51cf66; font-weight: bold; float: right;">Present - ${student.time}</span>
+                </div>`
+            ).join('');
+        }
+
+        function updateAttendance() {
+            alert(`Attendance updated for ${studentsInClass.length} students`);
+            
+            // Reset
+            studentsInClass = [];
+            currentOTP = null;
+            clearInterval(otpTimer);
+            
+            document.getElementById('otpDisplay').textContent = 'No OTP Generated';
+            document.getElementById('otpTimer').textContent = '';
+            document.getElementById('updateBtn').classList.add('hidden');
+            updatePresentStudentsList();
+        }
+
+        function updateStudentAnalytics() {
+            if (!currentUser || currentUser.type !== 'student') return;
+            
+            const student = currentUser.data;
+            let analyticsHtml = '';
+            let totalPresent = 0;
+            let totalClasses = 0;
+            
+            Object.keys(student.attendance).forEach(subject => {
+                const attendance = student.attendance[subject];
+                const percentage = (attendance.present / attendance.total) * 100;
+                
+                totalPresent += attendance.present;
+                totalClasses += attendance.total;
+                
+                const statusColor = percentage >= 75 ? '#51cf66' : '#ff6b6b';
+                
+                analyticsHtml += `
+                    <div style="margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <strong>${subject}</strong>
+                            <span style="color: ${statusColor}; font-weight: bold;">${percentage.toFixed(1)}%</span>
+                        </div>
+                        <div style="background: #e1e1e1; height: 10px; border-radius: 5px; margin: 5px 0;">
+                            <div style="background: ${statusColor}; height: 100%; width: ${percentage}%; border-radius: 5px;"></div>
+                        </div>
+                        <small>${attendance.present}/${attendance.total} classes attended</small>
+                    </div>
+                `;
+            });
+            
+            const overallPercentage = totalClasses > 0 ? (totalPresent / totalClasses) * 100 : 0;
+            const overallColor = overallPercentage >= 75 ? '#51cf66' : '#ff6b6b';
+            
+            analyticsHtml = `
+                <div style="margin-bottom: 20px; padding: 15px; background: #e7f3ff; border-radius: 8px;">
+                    <h4>Overall Attendance: <span style="color: ${overallColor};">${overallPercentage.toFixed(1)}%</span></h4>
+                    <p>${totalPresent}/${totalClasses} total classes attended</p>
+                </div>
+            ` + analyticsHtml;
+            
+            document.getElementById('studentAnalytics').innerHTML = analyticsHtml;
+        }
+    </script>
+</body>
+</html>
